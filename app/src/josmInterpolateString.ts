@@ -17,9 +17,9 @@ type PlainLibrary = {[key in string]: string | PlainLibrary}
 type PlainKeyAssociation = {[keyFragment in string]: string}
 type KeyAssociation = {[keyFragment in string]: string | Data<string>}
 
-export function interpolateString(source: string, library: PlainLibrary, keyAssociation: PlainKeyAssociation): Data<string>
-export function interpolateString(source: string, library: DataBase<{[key in string]: string}>, keyAssociation: KeyAssociation): Data<string>
-export function interpolateString(source: string, library: DataLibrary, keyAssociation: PlainKeyAssociation): Data<string>
+export function interpolateString(source: string, library: PlainLibrary, keyAssociation?: PlainKeyAssociation): Data<string>
+export function interpolateString(source: string, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation): Data<string>
+export function interpolateString(source: string, library: DataLibrary, keyAssociation?: PlainKeyAssociation): Data<string>
 export function interpolateString(source: string, library: Library, keyAssociation: KeyAssociation = {}): Data<string> {
 
   let returnData = new Data(source)
@@ -101,6 +101,8 @@ export function interpolateString(source: string, library: Library, keyAssociati
     a = end - (omit - curInsert.length)
 
   }
+
+  returnData.set(res)
 
   return returnData
 }

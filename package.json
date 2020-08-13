@@ -37,5 +37,10 @@
     "tslib": "2.0.0",
     "typescript": "^3.9.5",
     "webpack-merge": "^5.0.9"
+  },
+  "dependencies": {
+    "josm": "^1.1.9",
+    "xrray": "^4.6.8",
+    "xtring": "^1.2.0"
   }
 }

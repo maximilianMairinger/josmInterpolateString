@@ -1,4 +1,4 @@
-# [nameWithSpaces]
+# Josm interpolate string
 
 Josm string interpolation.
 

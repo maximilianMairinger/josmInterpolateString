@@ -17,10 +17,10 @@
     "url": "git+https://github.com/maximilianMairinger/josmInterpolateString.git"
   },
   "keywords": [
-  "josm",
-  "interpolate",
-  "string"
-],
+    "josm",
+    "interpolate",
+    "string"
+  ],
   "author": "Maximilian Mairinger",
   "license": "ISC",
   "bugs": {

@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json'
 export default {
   input: 'repl/src/repl.ts',
   output: {
-    file: 'repl/dist/josmInterpolateString.js',
+    file: 'repl/dist/josmInterpolateString-repl.js',
     format: 'cjs',
     sourcemap: true
   },

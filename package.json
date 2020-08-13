@@ -1,6 +1,6 @@
 {
   "name": "josm-interpolate-string",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Josm string interpolation.",
   "main": "app/dist/josmInterpolateString.js",
   "types": "app/dist/josmInterpolateString.d.ts",

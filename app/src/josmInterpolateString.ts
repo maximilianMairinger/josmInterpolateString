@@ -11,16 +11,18 @@ const token = {
 }
 
 
-type Library = {[key in string]: string | Data<string>} | DataBase<{[key in string]: string}>
-interface Activatable {
-  activate(init?: boolean): this
-  deactivate(): this
-}
+type Library = {[key in string]: string | Data<string> | Library} | DataBase<{[key in string]: string}>
+type DataLibrary = {[key in string]: string | Data<string> | Library}
+type PlainLibrary = {[key in string]: string | PlainLibrary}
+type PlainKeyAssociation = {[keyFragment in string]: string}
+type KeyAssociation = {[keyFragment in string]: string | Data<string>}
 
-export function interpolateString(source: string, library: {[key in string]: Data<string>} | DataBase<{[key in string]: string}>, cb?: (s: string) => void, init?: boolean): Activatable
-export function interpolateString(source: string, library: {[key in string]: string}): string
-export function interpolateString(source: string, library: Library, cb?: (s: string) => void, init: boolean = true): any {
+export function interpolateString(source: string, library: PlainLibrary, keyAssociation: PlainKeyAssociation): Data<string>
+export function interpolateString(source: string, library: DataBase<{[key in string]: string}>, keyAssociation: KeyAssociation): Data<string>
+export function interpolateString(source: string, library: DataLibrary, keyAssociation: PlainKeyAssociation): Data<string>
+export function interpolateString(source: string, library: Library, keyAssociation: KeyAssociation = {}): Data<string> {
 
+  let returnData = new Data(source)
   let res = source
   let a = 0
   let subscriptions: DataSubscription<any>[] = []
@@ -42,18 +44,32 @@ export function interpolateString(source: string, library: Library, cb?: (s: str
     if (localEnd === -1) break
     let end = localEnd + a
     let keysAsString = source.substring(localStart + token.open.length, localEnd - token.close.length).trim()
+    let keys = keysAsString.split("/").replace(v => v.trim())
 
-    let keys = keysAsString.split(".")
-    let li: any = library
-    if (keys.ea((key) => {
-      li = li[key]
-      if (li === undefined) return true
-    })) li = keys.last
+    
+    let li = keys.ea((key) => {
+      let keyFragments = key.split(".")
+      let li: any = library
+      if (!keyFragments.ea((keyFragment) => {
+        if (keyAssociation[keyFragment] !== undefined) {
+          keyFragment = keyAssociation[keyFragment] as any
+          if ((keyFragment as any) instanceof Data) li = li(keyFragment)
+          else li = li[keyFragment]
+        }
+        else li = li[keyFragment]
+        if (li === undefined) return true
+      })) return li
+    })
+
+    if (li === undefined) li = keys.first
+
+
+    
 
 
     let curInsert: string
 
-    // FIXME: could be DataLink as well, do some other check to find out if data
+    // FIXME: could be DataLink as well, do some other check to find out if instanceof data
     if (li instanceof Data) {
       curInsert = li.get()
       let mySubIndexStorageIndex = subIndexStorage.length
@@ -69,7 +85,7 @@ export function interpolateString(source: string, library: Library, cb?: (s: str
         })
         res = res.splice(start, omit, newInsert)
 
-        cb(res)
+        returnData.set(res)
       }, false))
     }
     else {
@@ -86,23 +102,7 @@ export function interpolateString(source: string, library: Library, cb?: (s: str
 
   }
 
-  if (cb) {
-    if (init) cb(res)
-
-    return {
-      activate(init?: boolean) {
-        subscriptions.Inner("activate", [init])
-        return this
-      },
-      deactivate() {
-        subscriptions.Inner("deactivate", [])
-        return this
-      }
-    }
-  }
-  else {
-    return res
-  }
+  return returnData
 }
 
 

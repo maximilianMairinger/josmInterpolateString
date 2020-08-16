@@ -1,17 +1,34 @@
 import josmInterpolateString from "./../../app/src/josmInterpolateString"
 //const testElem = document.querySelector("#test")
 
-const ecosystemConfigJsTemplate = `module.exports = {
-  apps : [{
-    script: "replServer/dist/server.js",
-    name: "$[ branch / hash ].$[ name ]",
-    exec_mode : "cluster",
-    instances: 2,
-    wait_ready: true,
-    args: "--port $[ port ]"
-  }]
+const preConfigFileContent = `
+upstream nodejs_upstream_$[ port ] {
+  server 127.0.0.1:$[ port ];
+  keepalive 64;
 }
-`
+
+server {
+
+  listen 80;
+                 
+  server_name $[ domain ];
+
+  location / {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Host $http_host;
+
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+
+    proxy_pass http://nodejs_upstream_$[ port ]/;
+    proxy_redirect off;
+    proxy_read_timeout 240s;
+  }
+
+}`
 
 
-josmInterpolateString(ecosystemConfigJsTemplate, {branch: "BRANCH", name: "NAME", port: "PORT", hash: "HASH"}).get(console.log)
+
+josmInterpolateString(preConfigFileContent, {port: "3000", domain: "d9780d6ced7e646b4c52bfb2c16655e383d38431.tingomaxochato.maximilian.mairinger.com"}).get(console.log)

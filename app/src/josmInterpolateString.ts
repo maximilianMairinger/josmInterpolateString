@@ -71,14 +71,14 @@ export function interpolateString(source: string, library: Library, keyAssociati
 
     // FIXME: could be DataLink as well, do some other check to find out if instanceof data
     if (li instanceof Data) {
-      curInsert = li.get()
+      curInsert = li.get().toString()
       let mySubIndexStorageIndex = subIndexStorage.length
       subIndexStorage.add(start)
       subscriptions.add(li.get((newInsert: string) => {
         let start = subIndexStorage[mySubIndexStorageIndex]
         let omit = curInsert.length
         let delta = newInsert.length - omit
-        curInsert = newInsert
+        curInsert = newInsert.toString()
 
         subIndexStorage.ea((e, i) => {
           if (e > start) subIndexStorage[i] = subIndexStorage[i] + delta
@@ -89,7 +89,7 @@ export function interpolateString(source: string, library: Library, keyAssociati
       }, false))
     }
     else {
-      curInsert = li
+      curInsert = li.toString()
     }
     
     let omit = end - start

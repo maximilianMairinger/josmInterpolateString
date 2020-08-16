@@ -29,6 +29,19 @@ server {
 
 }`
 
+let conf = {
+  appDest: '/var/www/html',
+  nginxDest: '/etc/nginx',
+  domain: 'd9780d6ced7e646b4c52bfb2c16655e383d38431.tingomaxochato.maximilian.mairinger.com',
+  name: 'tingoMaxoChato',
+  hash: 'd9780d6ced7e646b4c52bfb2c16655e383d38431',
+  port: 5002,
+  githubUsername: 'maximilianMairinger',
+  modifier: 'd9780d6ced7e646b4c52bfb2c16655e383d38431',
+  dir: '/var/www/html/tingoMaxoChato/d9780d6ced7e646b4c52bfb2c16655e383d38431'
+}
 
+debugger
 
-josmInterpolateString(preConfigFileContent, {port: "3000", domain: "d9780d6ced7e646b4c52bfb2c16655e383d38431.tingomaxochato.maximilian.mairinger.com"}).get(console.log)
+//@ts-ignore
+console.log(josmInterpolateString(preConfigFileContent, conf).get())

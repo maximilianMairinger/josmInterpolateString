@@ -17,11 +17,28 @@ type PlainLibrary = {[key in string]: string | PlainLibrary}
 type PlainKeyAssociation = {[keyFragment in string]: string}
 type KeyAssociation = {[keyFragment in string]: string | Data<string>}
 
-export function interpolateString(source: string, library: PlainLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
-export function interpolateString(source: string, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation, token?: typeof defaultToken): Data<string>
-export function interpolateString(source: string, library: DataLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
-export function interpolateString(source: string, library: Library, keyAssociation: KeyAssociation = {}, token: typeof defaultToken = defaultToken): Data<string> {
+export function interpolateString(source: string | Data<string>, library: PlainLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string | Data<string>, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string | Data<string>, library: DataLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string | Data<string>, library: Library, keyAssociation: KeyAssociation = {}, token: typeof defaultToken = defaultToken): Data<string> {
 
+  if (typeof source === "string") return _interpolateString(source, library, keyAssociation, token)
+  else {
+    // this is a little dirty, but JOSM should unsub from the inner data when the outer data changes, so hopefully no memory leak :P
+    const ret = new Data("")
+    source.get((source) => {
+      const end = _interpolateString(source, library, keyAssociation, token)
+      end.get((end) => {
+        ret.set(end)
+      })
+    })
+    return ret
+  }
+  
+}
+
+
+function _interpolateString(source: string, library: Library, keyAssociation: KeyAssociation = {}, token: typeof defaultToken = defaultToken) {
   let returnData = new Data(source)
   let res = source
   let a = 0

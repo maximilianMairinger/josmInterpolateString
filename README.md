@@ -12,12 +12,38 @@ Josm string interpolation.
 
 ## Usage
 
-
+Simple. Very simmilar to the native js implementation.
 
 ```ts
-import josmInterpolateString from "josm-interpolate-string"
+import interpolate from "josm-interpolate-string"
 
-josmInterpolateString()
+interpolate("Hello ${name}", { userName: "Max" }).get() // Hello Max
+```
+
+With changing values
+
+```ts
+import { DataBase } from "josm"
+
+const lang = new DataBase({ 
+  en: {
+    greeting: "Hello",
+    user: {
+      handle: "Max"
+    }
+  }
+})
+ 
+const data = interpolate("${greeting} ${user.handle}", lang.en)
+
+data.get() // Hello Max
+lang.en.user.handle.set("John")
+data.get() // Hello John
+
+// or subscribe to changes
+data.get((text) => {
+  console.log(text) // Hello John [...]
+})
 ```
 
 ## Contribute

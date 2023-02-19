@@ -1,4 +1,4 @@
-import { Data, DataBase, DataSubscription } from "josm"
+import { Data, DataBase, DataSubscription, ReadonlyData } from "josm"
 import xrray from "xrray"
 import xtring from "xtring"
 xrray()
@@ -17,10 +17,10 @@ type PlainLibrary = {[key in string]: string | PlainLibrary}
 type PlainKeyAssociation = {[keyFragment in string]: string}
 type KeyAssociation = {[keyFragment in string]: string | Data<string>}
 
-export function interpolateString(source: string | Data<string>, library: PlainLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
-export function interpolateString(source: string | Data<string>, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation, token?: typeof defaultToken): Data<string>
-export function interpolateString(source: string | Data<string>, library: DataLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
-export function interpolateString(source: string | Data<string>, library: Library, keyAssociation: KeyAssociation = {}, token: typeof defaultToken = defaultToken): Data<string> {
+export function interpolateString(source: string | ReadonlyData<string>, library: PlainLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string | ReadonlyData<string>, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string | ReadonlyData<string>, library: DataLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string | ReadonlyData<string>, library: Library, keyAssociation: KeyAssociation = {}, token: typeof defaultToken = defaultToken): Data<string> {
 
   if (typeof source === "string") return _interpolateString(source, library, keyAssociation, token)
   else {

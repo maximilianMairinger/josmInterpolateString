@@ -4,7 +4,7 @@ import xtring from "xtring"
 xrray()
 xtring()
 
-const token = {
+const defaultToken = {
   open: "$[",
   close: "]",
   escape: "$"
@@ -17,10 +17,10 @@ type PlainLibrary = {[key in string]: string | PlainLibrary}
 type PlainKeyAssociation = {[keyFragment in string]: string}
 type KeyAssociation = {[keyFragment in string]: string | Data<string>}
 
-export function interpolateString(source: string, library: PlainLibrary, keyAssociation?: PlainKeyAssociation): Data<string>
-export function interpolateString(source: string, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation): Data<string>
-export function interpolateString(source: string, library: DataLibrary, keyAssociation?: PlainKeyAssociation): Data<string>
-export function interpolateString(source: string, library: Library, keyAssociation: KeyAssociation = {}): Data<string> {
+export function interpolateString(source: string, library: PlainLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string, library: DataBase<{[key in string]: string}>, keyAssociation?: KeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string, library: DataLibrary, keyAssociation?: PlainKeyAssociation, token?: typeof defaultToken): Data<string>
+export function interpolateString(source: string, library: Library, keyAssociation: KeyAssociation = {}, token: typeof defaultToken = defaultToken): Data<string> {
 
   let returnData = new Data(source)
   let res = source
